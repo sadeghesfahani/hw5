@@ -1,6 +1,6 @@
 import tkinter as tk
 from users.auth import *
-class Screen:
+class Log:
     def __init__(self):
         self.username = str()
         self.password = str()
@@ -9,7 +9,7 @@ class Screen:
         self.root.geometry("400x500")
         self.spacer1_label = tk.Label(self.root, text="", font=("calabri", 18), height=4)
         self.spacer1_label.grid(column=1, row=1, columnspan=2)
-        self.welcome_label = tk.Label(self.root, text="Welcome to Auth", font=("calabri", 18))
+        self.welcome_label = tk.Label(self.root, text="Welcome to SinaMedia", font=("calabri", 18))
         self.welcome_label.grid(column=1, row=2, columnspan=2)
         self.spacer_label = tk.Label(self.root, text="", font=("calabri", 18), height=2)
         self.spacer_label.grid(column=1, row=3, columnspan=2)
@@ -35,9 +35,18 @@ class Screen:
         self.root.mainloop()
 
     def login(self):
-        #print(self.username_entry.get())
-        #print(self.password_entry.get())
-        autatiocatio=Auth(self.username_entry.get(),self.password_entry.get())
+        autatiocation=Auth(self.username_entry.get(),self.password_entry.get())
+        if autatiocation.logged_in:
+            self.root.quit()
+
     def signup(self):
         print(self.username_entry.get())
-scr=Screen()
+
+
+class Home:
+    def __init__(self):
+        self.root=tk.Tk()
+        self.root.title("Home")
+
+
+scr=Log()
