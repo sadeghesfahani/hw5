@@ -2,10 +2,12 @@ import threading
 import time
 import tkinter as tk
 from users.auth import *
+from users.user import *
 
 
 class Log:
     def __init__(self):
+        self.timer = threading.Timer(1.0, self.change)
         self.username = str()
         self.password = str()
 
@@ -40,28 +42,28 @@ class Log:
         self.log_in_button.grid(column=1, row=8, sticky="we")
         self.register_button = tk.Button(text="sign up!", height=2, command=lambda: self.signup())
         self.register_button.grid(column=2, row=8, sticky="we")
-        self.teacher_radio = tk.Radiobutton(self.root, var=self.option, text="teacher",value="teacher",
+        self.teacher_radio = tk.Radiobutton(self.root, var=self.option, text="teacher", value="teacher",
                                             font=("calabri", 18))
         self.teacher_radio.grid(column=1, row=9)
-        self.student_radio = tk.Radiobutton(self.root, var=self.option,text="student", value="student",
+        self.student_radio = tk.Radiobutton(self.root, var=self.option, text="student", value="student",
                                             font=("calabri", 18))
         self.student_radio.grid(column=2, row=9)
         self.root.mainloop()
 
     def login(self):
-        autatiocation = Auth(self.username_entry.get(), self.password_entry.get())
-        if autatiocation.logged_in:
+        user = User(self.username_entry.get(), self.password_entry.get())
+        user.log_in()
+        # autatiocation = Auth()
+        if user.is_login:
             self.root.quit()
 
     def signup(self):
-        print()
-        autatiocation = Auth(self.username_entry.get(), self.password_entry.get(),self.option.get(), True)
-        if autatiocation.signed_up:
+        user = User(self.username_entry.get(), self.password_entry.get(), self.option.get())
+        # autatiocation = Auth(self.username_entry.get(), self.password_entry.get(), self.option.get(), True)
+        user.register()
+        if user.is_registered:
             self.spacer1_label.config(text="you have signed up successfully")
-            self.timer = threading.Timer(1.0, self.change)
             self.timer.start()
-            # self.spacer1_label.config(text="")
-        del autatiocation
 
     def change(self):
         self.spacer1_label.config(text="")
@@ -74,7 +76,7 @@ class Home:
         self.root.title("Home")
 
 
-class User_interface:
+class UserInterface:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("User interface")
