@@ -1,5 +1,6 @@
 import threading
 import time
+from tkinter import ttk
 import tkinter as tk
 from users.auth import *
 from users.user import *
@@ -82,6 +83,7 @@ class Log:
 class UserInfo:
     def __init__(self, user):
         self.root = tk.Tk()
+        self.root.geometry("800x900")
         self.first_name = str()
         self.last_name = str()
         self.email = str()
@@ -103,7 +105,7 @@ class UserInfo:
                                                                                              columnspan=2)
 
     def save_user(self):
-        #todo: check input and raise appropriate errors
+        # todo: check input and raise appropriate errors
         print("hi hi")
         print(self.first_name_entry.get())
         print(self.last_name_entry.get())
@@ -118,11 +120,43 @@ class UserInterface:
         self.root = tk.Tk()
         self.root.title("User interface")
         self.root.geometry("1100x800")
-        self.add = tk.Button(self.root, text="add").pack()
-        self.remove = tk.Button(self.root, text="remove").pack()
-        self.modify = tk.Button(self.root, text="modify").pack()
-        self.name = tk.Label(self.root, text=self.user.username).pack()
+        self.teachers_tree = ttk.Treeview(self.root)
+        self.teachers_tree["columns"] = ("name", "family", "email", "classes")
+
+        self.teachers_tree.column('#0', width=0, stretch=tk.NO)
+        self.teachers_tree.column('name', width=240, anchor=tk.CENTER)
+        self.teachers_tree.column('family', width=240, anchor=tk.CENTER)
+        self.teachers_tree.column('email', width=240, anchor=tk.CENTER)
+        self.teachers_tree.column('classes', width=240, anchor=tk.CENTER)
+
+        self.teachers_tree.heading('#0', text="", anchor=tk.CENTER)
+        self.teachers_tree.heading('name', text="Name", anchor=tk.CENTER)
+        self.teachers_tree.heading('family', text="Family", anchor=tk.CENTER)
+        self.teachers_tree.heading('email', text="Email", anchor=tk.CENTER)
+        self.teachers_tree.heading('classes', text="Classes", anchor=tk.CENTER)
+        teacher_tree = self.teacher_tree()
+        counter = 0
+        for col_info in teacher_tree:
+            self.teachers_tree.insert(parent='', index=counter, iid=counter, text='',
+                                      values=(col_info[0], col_info[1], col_info[2], col_info[3]))
+            counter += 1
+        self.teachers_tree.grid(column=1,row=1,rowspan=4)
+        self.add = tk.Button(self.root, text="add").grid(column=2,row=1)
+        self.remove = tk.Button(self.root, text="remove").grid(column=2,row=2)
+        self.modify = tk.Button(self.root, text="modify").grid(column=2,row=3)
+        self.name = tk.Label(self.root, text=self.user.username).grid(column=2,row=4)
         self.root.mainloop()
+
+    def teacher_tree(self):
+        data_provider = list()
+        with open("users/database.txt", "r") as file:
+            data = file.readlines()
+            teachers = [teacher.split(",")[0].strip() for teacher in data if teacher.split(",")[2].strip() == "teacher"]
+            for teacher in teachers:
+                dataloader = User(teacher, "nothing")
+                dataloader.load_data()
+                data_provider.append([dataloader.firt_name, dataloader.last_name, dataloader.email, dataloader.classes])
+        return data_provider
 
 
 scr = Log()
