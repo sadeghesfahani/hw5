@@ -112,23 +112,74 @@ class UserInfo:
         # self.spacer1_label = tk.Label(self.root, text="", font=("calabri", 18), height=900, width=1200, image=bg)
         # self.spacer1_label.grid(column=1, row=1, columnspan=2)
         # self.image_canvas=tk.Canvas(self.root,image=bg)
-        self.image_label = tk.Label(self.root, text="", height=300, width=300, image=bg,bg="white").place(x=10, y=10)
-        self.first_name_label = tk.Label(self.root, text="First_name: ", font=("calabri", 18), height=4,bg="white").place(x=350,
-                                                                                                               y=10)
+        self.image_label = tk.Label(self.root, text="", height=300, width=300, image=bg, bg="white").place(x=10, y=10)
+        self.first_name_label = tk.Label(self.root, text="First_name: ", font=("calabri", 18), height=4,
+                                         bg="white").place(x=350,
+                                                           y=10)
         self.first_name_entry = tk.Entry(self.root, textvariable=self.first_name, width=25, font=("calabri", 18))
         self.first_name_entry.place(x=550, y=50)
-        self.last_name_label = tk.Label(self.root, text="Last_name: ", font=("calabri", 18), height=4,bg="white").place(x=350,
-                                                                                                             y=100)
-        self.last_name_entry = tk.Entry(self.root, bg="white",textvariable=self.last_name, width=25, font=("calabri", 18))
+        self.last_name_label = tk.Label(self.root, text="Last_name: ", font=("calabri", 18), height=4,
+                                        bg="white").place(x=350,
+                                                          y=100)
+        self.last_name_entry = tk.Entry(self.root, bg="white", textvariable=self.last_name, width=25,
+                                        font=("calabri", 18))
         self.last_name_entry.place(x=550, y=140)
-        self.email_label = tk.Label(self.root, text="Email: ", font=("calabri", 18), height=4,bg="white").place(x=350, y=200)
+        self.email_label = tk.Label(self.root, text="Email: ", font=("calabri", 18), height=4, bg="white").place(x=350,
+                                                                                                                 y=200)
         self.email_entry = tk.Entry(self.root, textvariable=self.email, width=25, font=("calabri", 18))
         self.email_entry.place(x=550, y=240)
-        self.save = tk.Button(self.root, text="Save", command=lambda: self.save_user(),bg="cyan",width=25,height=3).place(x=1000, y=50)
+        self.save = tk.Button(self.root, text="Save", command=lambda: self.save_user(), bg="cyan", width=25,
+                              height=3).place(x=1000, y=50)
         self.picture = tk.Button(self.root, text="Avatar", command=lambda: self.save_user(), bg="cyan", width=25,
-                              height=3).place(x=1000, y=150)
-        self.spacer = tk.Label(self.root, text="", font=("calabri", 18), height=1,width=900,bg="light gray").place(x=0,
-                                                                                                             y=300)
+                                 height=3).place(x=1000, y=150)
+        self.spacer = tk.Label(self.root, text="", font=("calabri", 18), height=1, width=900, bg="light gray").place(
+            x=0,
+            y=300)
+
+        # left tree view
+        self.class_tree = ttk.Treeview(self.root)
+        self.class_tree["columns"] = ("ID", "name", "level", "capacity")
+
+        self.class_tree.column('#0', width=0, stretch=tk.NO)
+        self.class_tree.column('ID', width=50, anchor=tk.CENTER)
+        self.class_tree.column('name', width=170, anchor=tk.CENTER)
+        self.class_tree.column('level', width=220, anchor=tk.CENTER)
+        self.class_tree.column('capacity', width=90, anchor=tk.CENTER)
+        # self.teachers_tree.column('classes', width=240, anchor=tk.CENTER)
+
+        self.class_tree.heading('#0', text="", anchor=tk.W)
+        self.class_tree.heading('ID', text="ID", anchor=tk.CENTER)
+        self.class_tree.heading('name', text="Name", anchor=tk.CENTER)
+        self.class_tree.heading('level', text="Level", anchor=tk.CENTER)
+        self.class_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
+        self.class_tree.insert(parent='', index=1, iid=1, text='',
+                               values=(1, 406, "lower intermediate", 8))
+        self.class_tree.place(x=30, y=350)
+        # self.teachers_tree.heading('classes', text="Classes", anchor=tk.CENTER)
+
+        # right
+        self.profile_tree = ttk.Treeview(self.root)
+        self.profile_tree["columns"] = ("ID", "name", "level", "capacity")
+
+        self.profile_tree.column('#0', width=0, stretch=tk.NO)
+        self.profile_tree.column('ID', width=50, anchor=tk.CENTER)
+        self.profile_tree.column('name', width=170, anchor=tk.CENTER)
+        self.profile_tree.column('level', width=220, anchor=tk.CENTER)
+        self.profile_tree.column('capacity', width=90, anchor=tk.CENTER)
+        # self.teachers_tree.column('classes', width=240, anchor=tk.CENTER)
+
+        self.profile_tree.heading('#0', text="", anchor=tk.W)
+        self.profile_tree.heading('ID', text="ID", anchor=tk.CENTER)
+        self.profile_tree.heading('name', text="Name", anchor=tk.CENTER)
+        self.profile_tree.heading('level', text="Level", anchor=tk.CENTER)
+        self.profile_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
+        self.profile_tree.insert(parent='', index=1, iid=1, text='',
+                                 values=(1, 406, "lower intermediate", 8))
+        self.profile_tree.place(x=700, y=350)
+
+        self.add_button = tk.Button(self.root,text="-->",width=12).place(x=570, y=350)
+        self.remove_button = tk.Button(self.root, text="Delete", width=12).place(x=570, y=390)
+        self.info_button = tk.Button(self.root, text="Info", width=12).place(x=570, y=430)
         self.root.mainloop()
 
     def save_user(self):
