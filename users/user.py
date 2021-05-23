@@ -10,6 +10,7 @@ class User:
         self.authentication = Authentication(self.username, self.__password)
         self.is_login = False
         self.is_registered = False
+        self.classes = list()
 
     def log_in(self):
         if self.authentication.logged_in:
@@ -19,3 +20,29 @@ class User:
     def register(self):
         self.is_registered = self.authentication.register(self.type)
 
+    def load_data(self):
+        with open(f"users/user_info/{self.username}.txt", "r") as file:
+            data = file.readlines()
+        for dt in data:
+            if len(dt) == 2:
+                first = dt.split(",")[0].strip()
+                last = dt.split(",")[1].strip()
+                if first == "first_name":
+                    self.firt_name = last
+                elif first == "last_name":
+                    self.last_name = last
+                elif first == "email":
+                    self.email = last
+                elif first == "class":
+                    self.classes = list(last)
+            else:
+                first = dt.split(",")[0].strip()
+                if first == "class":
+                    for cl in dt.split(",")[1:].strip():
+                        self.classes.append(cl)
+
+    def save_initial_data(self, first_name, last_name, email):
+        with open(f"users/user_info/{self.username}.txt", "w") as file:
+            file.write(f"fist_name={first_name}\n")
+            file.write(f"last_name={last_name}\n")
+            file.write(f"email={email}\n")

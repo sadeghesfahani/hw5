@@ -19,7 +19,7 @@ class Log:
         self.root.geometry("400x500")
         self.spacer1_label = tk.Label(self.root, text="", font=("calabri", 18), height=4)
         self.spacer1_label.grid(column=1, row=1, columnspan=2)
-        self.welcome_label = tk.Label(self.root, text="Welcome to SinaMedia", font=("calabri", 18))
+        self.welcome_label = tk.Label(self.root, text="Welcome to our institute", font=("calabri", 18))
         self.welcome_label.grid(column=1, row=2, columnspan=2)
         self.spacer_label = tk.Label(self.root, text="", font=("calabri", 18), height=2)
         self.spacer_label.grid(column=1, row=3, columnspan=2)
@@ -63,7 +63,6 @@ class Log:
             self.timer = threading.Timer(1.0, self.change)
             self.timer.start()
 
-
     def signup(self):
         user = User(self.username_entry.get(), self.password_entry.get(), self.option.get())
         # autatiocation = Auth(self.username_entry.get(), self.password_entry.get(), self.option.get(), True)
@@ -72,7 +71,7 @@ class Log:
             self.spacer1_label.config(text="you have signed up successfully")
             self.timer = threading.Timer(1.0, self.change)
             self.timer.start()
-
+            user_info = UserInfo(user)
 
     def change(self):
         self.spacer1_label.config(text="")
@@ -80,10 +79,37 @@ class Log:
         del self.timer
 
 
-class Home:
-    def __init__(self):
+class UserInfo:
+    def __init__(self, user):
         self.root = tk.Tk()
-        self.root.title("Home")
+        self.first_name = str()
+        self.last_name = str()
+        self.email = str()
+        self.user = user
+        self.root.title("more information")
+        self.first_name_label = tk.Label(self.root, text="First_name: ", font=("calabri", 18), height=4).grid(column=1,
+                                                                                                              row=1)
+        self.first_name_entry = tk.Entry(self.root, textvariable=self.first_name, width=15, font=("calabri", 18))
+        self.first_name_entry.grid(column=2, row=1)
+        self.last_name_label = tk.Label(self.root, text="Last_name: ", font=("calabri", 18), height=4).grid(column=1,
+                                                                                                            row=2)
+        self.last_name_entry = tk.Entry(self.root, textvariable=self.last_name, width=15, font=("calabri", 18))
+        self.last_name_entry.grid(column=2, row=2)
+        self.email_label = tk.Label(self.root, text="Email: ", font=("calabri", 18), height=4).grid(column=1,
+                                                                                                    row=3)
+        self.email_entry = tk.Entry(self.root, textvariable=self.email, width=15, font=("calabri", 18))
+        self.email_entry.grid(column=2, row=3)
+        self.save = tk.Button(self.root, text="save", command=lambda: self.save_user()).grid(column=1, row=4,
+                                                                                             columnspan=2)
+
+    def save_user(self):
+        #todo: check input and raise appropriate errors
+        print("hi hi")
+        print(self.first_name_entry.get())
+        print(self.last_name_entry.get())
+        print(self.email_entry.get())
+        self.user.save_initial_data(self.first_name_entry.get(), self.last_name_entry.get(), self.email_entry.get())
+        self.root.quit()
 
 
 class UserInterface:
@@ -95,6 +121,7 @@ class UserInterface:
         self.add = tk.Button(self.root, text="add").pack()
         self.remove = tk.Button(self.root, text="remove").pack()
         self.modify = tk.Button(self.root, text="modify").pack()
+        self.name = tk.Label(self.root, text=self.user.username).pack()
         self.root.mainloop()
 
 

@@ -1,0 +1,4 @@
+first_name=sina
+last_name=sadeghesfahani
+email=sadeghesfahani.sina@gmail.com
+class=12,52,35
