@@ -7,7 +7,7 @@ from users.user import *
 
 class Log:
     def __init__(self):
-        self.timer = threading.Timer(1.0, self.change)
+
         self.username = str()
         self.password = str()
 
@@ -55,7 +55,14 @@ class Log:
         user.log_in()
         # autatiocation = Auth()
         if user.is_login:
-            self.root.quit()
+            self.root.forget(self.root)
+            user_interface = UserInterface(user)
+            # self.root.quit()
+        else:
+            self.spacer1_label.config(text="User of password wrong")
+            self.timer = threading.Timer(1.0, self.change)
+            self.timer.start()
+
 
     def signup(self):
         user = User(self.username_entry.get(), self.password_entry.get(), self.option.get())
@@ -63,11 +70,14 @@ class Log:
         user.register()
         if user.is_registered:
             self.spacer1_label.config(text="you have signed up successfully")
+            self.timer = threading.Timer(1.0, self.change)
             self.timer.start()
+
 
     def change(self):
         self.spacer1_label.config(text="")
         self.timer.cancel()
+        del self.timer
 
 
 class Home:
@@ -77,10 +87,14 @@ class Home:
 
 
 class UserInterface:
-    def __init__(self):
+    def __init__(self, user):
+        self.user = user
         self.root = tk.Tk()
         self.root.title("User interface")
-        self.root.geometry("1200x900")
+        self.root.geometry("1100x800")
+        self.add = tk.Button(self.root, text="add").pack()
+        self.remove = tk.Button(self.root, text="remove").pack()
+        self.modify = tk.Button(self.root, text="modify").pack()
         self.root.mainloop()
 
 

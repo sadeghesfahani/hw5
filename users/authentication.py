@@ -7,6 +7,7 @@ class Authentication:
         self.__password = Authentication.make_hex(password)
         self.signup = signup
         self.type = type
+        self.logged_in = False
         # try:
         with open("users/database.txt", "r") as file:
             self.database = file.readlines()

@@ -18,3 +18,4 @@ class User:
 
     def register(self):
         self.is_registered = self.authentication.register(self.type)
+
