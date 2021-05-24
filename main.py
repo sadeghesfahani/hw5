@@ -136,6 +136,13 @@ class UserInfo:
             x=0,
             y=300)
 
+        self.spacer = tk.Label(self.root, text="Available classes", font=("calabri", 18), height=1, width=40, bg="white").place(
+            x=0,
+            y=350)
+        self.spacer = tk.Label(self.root, text="Your classes", font=("calabri", 18), height=1, width=40,
+                               bg="white").place(
+            x=675,
+            y=350)
         # left tree view
         self.class_tree = ttk.Treeview(self.root)
         self.class_tree["columns"] = ("ID", "name", "level", "capacity")
@@ -154,7 +161,11 @@ class UserInfo:
         self.class_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
         self.class_tree.insert(parent='', index=1, iid=1, text='',
                                values=(1, 406, "lower intermediate", 8))
-        self.class_tree.place(x=30, y=350)
+        self.class_tree.insert(parent='', index=2, iid=2, text='',
+                               values=(2, 601, "higher intermediate", 5))
+        self.class_tree.insert(parent='', index=3, iid=3, text='',
+                               values=(3, "CPE", "Advance (C2)", 7))
+        self.class_tree.place(x=30, y=400)
         # self.teachers_tree.heading('classes', text="Classes", anchor=tk.CENTER)
 
         # right
@@ -173,14 +184,96 @@ class UserInfo:
         self.profile_tree.heading('name', text="Name", anchor=tk.CENTER)
         self.profile_tree.heading('level', text="Level", anchor=tk.CENTER)
         self.profile_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
-        self.profile_tree.insert(parent='', index=1, iid=1, text='',
-                                 values=(1, 406, "lower intermediate", 8))
-        self.profile_tree.place(x=700, y=350)
+        # self.profile_tree.insert(parent='', index=1, iid=1, text='',
+        #                          values=(1, 406, "lower intermediate", 8))
+        self.profile_tree.place(x=700, y=400)
 
-        self.add_button = tk.Button(self.root,text="-->",width=12).place(x=570, y=350)
-        self.remove_button = tk.Button(self.root, text="Delete", width=12).place(x=570, y=390)
-        self.info_button = tk.Button(self.root, text="Info", width=12).place(x=570, y=430)
+        self.add_button = tk.Button(self.root, text="-->", width=12, command=lambda: self.add()).place(x=570, y=400)
+        self.remove_button = tk.Button(self.root, text="Delete", width=12,command= lambda :self.remove()).place(x=570, y=440)
+        self.info_button = tk.Button(self.root, text="Info", width=12).place(x=570, y=480)
+        self.counter = 4
         self.root.mainloop()
+
+
+    def remove(self):
+        # print(self.class_tree.selection())
+        get_tree_value = self.profile_tree.selection()
+        class_tree_items = self.profile_tree.get_children()
+        class_tree_items = self.class_tree.get_children()
+        # print(profile_tree_items)
+        # print(get_tree_value)
+        if len(get_tree_value) >= 2:
+            for item in get_tree_value:
+                selected = self.profile_tree.item(item)['values']
+                # print(selected)
+                # print(self.profile_tree.item(item)['values'][0])
+                # print(selected[0])
+                # if self.profile_tree.exists()
+                found = False
+                for other_items in class_tree_items:
+                    if self.class_tree.item(other_items)['values'][0] == selected[0]:
+                        found = True
+                if not found:
+                    self.class_tree.insert(parent='', index=self.counter, iid=self.counter, text='',
+                                             values=selected)
+                    self.profile_tree.delete(item)
+                    self.counter += 1
+                    found = False
+        elif len(get_tree_value) == 1:
+            selected = self.profile_tree.item(get_tree_value)['values']
+            # print(selected)
+            found = False
+            for other_items in class_tree_items:
+                if self.class_tree.item(other_items)['values'][0] == selected[0]:
+                    found = True
+            if not found:
+                self.class_tree.insert(parent='', index=self.counter, iid=self.counter, text='',
+                                         values=selected)
+                self.profile_tree.delete(get_tree_value)
+                self.counter += 1
+                found = False
+            self.counter += 1
+        # self.class_tree.delete(self.class_tree.selection())
+
+    def add(self):
+        # print(self.class_tree.selection())
+        get_tree_value = self.class_tree.selection()
+        class_tree_items = self.class_tree.get_children()
+        profile_tree_items = self.profile_tree.get_children()
+        #print(profile_tree_items)
+        # print(get_tree_value)
+        if len(get_tree_value) >= 2:
+            for item in get_tree_value:
+                selected = self.class_tree.item(item)['values']
+                # print(selected)
+                # print(self.profile_tree.item(item)['values'][0])
+                # print(selected[0])
+                # if self.profile_tree.exists()
+                found = False
+                for other_items in profile_tree_items:
+                    if self.profile_tree.item(other_items)['values'][0] == selected[0]:
+                        found = True
+                if not found:
+                    self.profile_tree.insert(parent='', index=self.counter, iid=self.counter, text='',
+                                             values=selected)
+                    self.class_tree.delete(item)
+                    self.counter += 1
+                    found = False
+        elif len(get_tree_value) == 1:
+            selected = self.class_tree.item(get_tree_value)['values']
+            # print(selected)
+            found = False
+            for other_items in profile_tree_items:
+                if self.profile_tree.item(other_items)['values'][0] == selected[0]:
+                    found = True
+            if not found:
+                self.profile_tree.insert(parent='', index=self.counter, iid=self.counter, text='',
+                                         values=selected)
+                self.class_tree.delete(get_tree_value)
+                self.counter += 1
+                found = False
+            self.counter += 1
+        # self.class_tree.delete(self.class_tree.selection())
 
     def save_user(self):
         # todo: check input and raise appropriate errors
