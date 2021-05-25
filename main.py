@@ -176,14 +176,7 @@ class UserInfo:
         self.class_tree.heading('name', text="Name", anchor=tk.CENTER)
         self.class_tree.heading('level', text="Level", anchor=tk.CENTER)
         self.class_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
-        counter = 0
-        cl = Curriculum()
-        classes = cl.load_all_classes()
-        for cla in classes:
-            real_capacity = int(cla[3]) - len(cla[4])
-            self.class_tree.insert(parent='', index=counter, iid=counter, text='',
-                                   values=(cla[0], cla[1], cla[2], real_capacity))
-            counter += 1
+
         # self.class_tree.insert(parent='', index=1, iid=1, text='',
         #                        values=(1, 406, "lower intermediate", 8))
         # self.class_tree.insert(parent='', index=2, iid=2, text='',
@@ -212,6 +205,19 @@ class UserInfo:
         # self.profile_tree.insert(parent='', index=1, iid=1, text='',
         #                          values=(1, 406, "lower intermediate", 8))
         self.profile_tree.place(x=700, y=400)
+
+        counter = 0
+        cl = Curriculum()
+        classes = cl.load_all_classes()
+        for cla in classes:
+            real_capacity = int(cla[3]) - len(cla[4])
+            if self.user.username in cla[4] or self.user.username in cla[5]:
+                self.profile_tree.insert(parent='', index=counter, iid=counter, text='',
+                                       values=(cla[0], cla[1], cla[2], real_capacity))
+            else:
+                self.class_tree.insert(parent='', index=counter, iid=counter, text='',
+                                       values=(cla[0], cla[1], cla[2], real_capacity))
+            counter += 1
 
         self.add_button = tk.Button(self.root, text="-->", width=12, command=lambda: self.add()).place(x=570, y=400)
         self.remove_button = tk.Button(self.root, text="Delete", width=12, command=lambda: self.remove()).place(x=570,
@@ -294,12 +300,17 @@ class UserInfo:
 
     def save_user(self):
         # todo: check input and raise appropriate errors
-        print("hi hi")
-        print(self.first_name_entry.get())
-        print(self.last_name_entry.get())
-        print(self.email_entry.get())
-        self.user.save_initial_data(self.first_name_entry.get(), self.last_name_entry.get(), self.email_entry.get())
-        self.root.quit()
+        # print("hi hi")
+        # print(self.first_name_entry.get())
+        # print(self.last_name_entry.get())
+        # print(self.email_entry.get())
+        classes=list()
+        items=self.profile_tree.get_children()
+        for item in items:
+            classes.append(self.profile_tree.item(item)['values'][0])
+        self.user.save_data(self.first_name_entry.get(), self.last_name_entry.get(), self.email_entry.get(),classes,self.user)
+        self.root.destroy()
+        log=Log()
 
 
 class UserInterface:

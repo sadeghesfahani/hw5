@@ -1,6 +1,6 @@
 # type=[teacher,manager,student]
 from users.authentication import *
-
+from curriculum.curriculum import *
 
 class User:
     def __init__(self, username, password, type=None):
@@ -47,8 +47,17 @@ class User:
             #         for cl in dt.split(",")[1:].strip():
             #             self.classes.append(cl)
 
-    def save_initial_data(self, first_name, last_name, email):
+    def save_data(self, first_name, last_name, email,classes,user):
         with open(f"users/user_info/{self.username}.txt", "w") as file:
             file.write(f"first_name={first_name}\n")
             file.write(f"last_name={last_name}\n")
             file.write(f"email={email}\n")
+            string_to_write=str()
+            for cla in classes:
+                string_to_write+=str(cla) + "," if cla != classes[len(classes)-1] else str(cla)
+
+            file.write(f"class={string_to_write}")
+
+        for cls in classes:
+            Curriculum().add_user(cls,user)
+    #def save_data(self):
