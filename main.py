@@ -196,19 +196,14 @@ class UserInfo:
 
 
     def remove(self):
-        # print(self.class_tree.selection())
         get_tree_value = self.profile_tree.selection()
         class_tree_items = self.profile_tree.get_children()
         class_tree_items = self.class_tree.get_children()
-        # print(profile_tree_items)
-        # print(get_tree_value)
+
         if len(get_tree_value) >= 2:
             for item in get_tree_value:
                 selected = self.profile_tree.item(item)['values']
-                # print(selected)
-                # print(self.profile_tree.item(item)['values'][0])
-                # print(selected[0])
-                # if self.profile_tree.exists()
+
                 found = False
                 for other_items in class_tree_items:
                     if self.class_tree.item(other_items)['values'][0] == selected[0]:
@@ -221,7 +216,6 @@ class UserInfo:
                     found = False
         elif len(get_tree_value) == 1:
             selected = self.profile_tree.item(get_tree_value)['values']
-            # print(selected)
             found = False
             for other_items in class_tree_items:
                 if self.class_tree.item(other_items)['values'][0] == selected[0]:
@@ -233,22 +227,16 @@ class UserInfo:
                 self.counter += 1
                 found = False
             self.counter += 1
-        # self.class_tree.delete(self.class_tree.selection())
 
     def add(self):
-        # print(self.class_tree.selection())
         get_tree_value = self.class_tree.selection()
         class_tree_items = self.class_tree.get_children()
         profile_tree_items = self.profile_tree.get_children()
-        #print(profile_tree_items)
-        # print(get_tree_value)
+
         if len(get_tree_value) >= 2:
             for item in get_tree_value:
                 selected = self.class_tree.item(item)['values']
-                # print(selected)
-                # print(self.profile_tree.item(item)['values'][0])
-                # print(selected[0])
-                # if self.profile_tree.exists()
+
                 found = False
                 for other_items in profile_tree_items:
                     if self.profile_tree.item(other_items)['values'][0] == selected[0]:
@@ -273,7 +261,7 @@ class UserInfo:
                 self.counter += 1
                 found = False
             self.counter += 1
-        # self.class_tree.delete(self.class_tree.selection())
+
 
     def save_user(self):
         # todo: check input and raise appropriate errors
