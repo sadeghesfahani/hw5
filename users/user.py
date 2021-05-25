@@ -58,6 +58,8 @@ class User:
 
             file.write(f"class={string_to_write}")
 
+        #if len(classes)
+        #todo: removing user from classes
         for cls in classes:
             Curriculum().add_user(cls,user)
     #def save_data(self):
