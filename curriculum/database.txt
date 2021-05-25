@@ -1,1 +1,0 @@
-1,teacher:ahmadreza-sina,student:mohamad-sara,day:wednesday-thursday-friday,time:10:30-12:00

@@ -1,0 +1,7 @@
+ID=1
+level=intermediate
+name=504
+capacity=5
+students=alireza,mahdi,sina
+teachers=mehdi
+time=(wed,10:30-12:00)(friday,12:00,13:30)

@@ -3,7 +3,7 @@ import time
 import os
 from tkinter import ttk
 import tkinter as tk
-
+from curriculum.curriculum import *
 from PIL import ImageTk, Image
 from PIL.ImageTk import PhotoImage
 
@@ -159,12 +159,18 @@ class UserInfo:
         self.class_tree.heading('name', text="Name", anchor=tk.CENTER)
         self.class_tree.heading('level', text="Level", anchor=tk.CENTER)
         self.class_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
-        self.class_tree.insert(parent='', index=1, iid=1, text='',
-                               values=(1, 406, "lower intermediate", 8))
-        self.class_tree.insert(parent='', index=2, iid=2, text='',
-                               values=(2, 601, "higher intermediate", 5))
-        self.class_tree.insert(parent='', index=3, iid=3, text='',
-                               values=(3, "CPE", "Advance (C2)", 7))
+        counter=0
+        cl=Curriculum()
+        classes=cl.load_all_classes()
+        for cla in classes:
+            self.class_tree.insert(parent='', index=counter, iid=counter, text='',values=(cla[0], cla[1], cla[2], cla[3]))
+            counter+=1
+        # self.class_tree.insert(parent='', index=1, iid=1, text='',
+        #                        values=(1, 406, "lower intermediate", 8))
+        # self.class_tree.insert(parent='', index=2, iid=2, text='',
+        #                        values=(2, 601, "higher intermediate", 5))
+        # self.class_tree.insert(parent='', index=3, iid=3, text='',
+        #                        values=(3, "CPE", "Advance (C2)", 7))
         self.class_tree.place(x=30, y=400)
         # self.teachers_tree.heading('classes', text="Classes", anchor=tk.CENTER)
 
