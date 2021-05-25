@@ -6,9 +6,8 @@ import tkinter as tk
 from curriculum.curriculum import *
 from PIL import ImageTk, Image
 from PIL.ImageTk import PhotoImage
-
-from users.auth import *
 from users.user import *
+from exception import *
 
 
 class Log:
@@ -20,10 +19,8 @@ class Log:
         self.root = tk.Tk()
         self.option = tk.StringVar()
         self.option.set("student")
-        # self.option = self.root.StringVar()
         self.root.title("Login")
         self.root.geometry("1100x800")
-        # background image
         bg = PhotoImage(file="image/background.jpg")
         self.spacer1_label = tk.Label(self.root, text="", font=("calabri", 18), height=900, width=1200, image=bg)
         self.spacer1_label.grid(column=1, row=1, columnspan=2)
@@ -66,27 +63,42 @@ class Log:
         self.root.mainloop()
 
     def login(self):
-        user = User(self.username_entry.get(), self.password_entry.get())
-        user.log_in()
-        # autatiocation = Auth()
-        if user.is_login:
-            self.root.forget(self.root)
-            user_interface = UserInterface(user)
-            # self.root.quit()
-        else:
+        try:
+            user = User(self.username_entry.get(), self.password_entry.get())
+            user.log_in()
+            # autatiocation = Auth()
+            if user.is_login:
+                self.root.forget(self.root)
+                user_interface = UserInterface(user)
+                # self.root.quit()
+            else:
+
+                raise UserAndPassNotMatch
+        except UserAndPassNotMatch:
             self.spacer_label.config(text="User of password wrong")
             self.timer = threading.Timer(1.0, self.change)
             self.timer.start()
-
     def signup(self):
-        user = User(self.username_entry.get(), self.password_entry.get(), self.option.get())
-        # autatiocation = Auth(self.username_entry.get(), self.password_entry.get(), self.option.get(), True)
-        user.register()
-        if user.is_registered:
-            self.spacer_label.config(text="you have signed up successfully")
+        try:
+            user = User(self.username_entry.get(), self.password_entry.get(), self.option.get())
+            # autatiocation = Auth(self.username_entry.get(), self.password_entry.get(), self.option.get(), True)
+            user.register()
+            if user.is_registered:
+                #self.spacer_label.config(text="you have signed up successfully")
+                #self.timer = threading.Timer(1.0, self.change)
+                #self.timer.start()
+                self.root.destroy()
+                user_info = UserInfo(user)
+            else:
+                pass
+        except UserAlreadyExist:
+            self.spacer_label.config(text="User already exist")
             self.timer = threading.Timer(1.0, self.change)
             self.timer.start()
-            user_info = UserInfo(user)
+        except PasswordTooShort:
+            self.spacer_label.config(text="password must be at least 8")
+            self.timer = threading.Timer(1.0, self.change)
+            self.timer.start()
 
     def change(self):
         self.spacer_label.config(text="")
@@ -104,8 +116,7 @@ class UserInfo:
         self.user = user
         self.root.title("more information")
         self.root.config(background="white")
-        # bg=ImageTk.PhotoImage(Image.open("image/background.jpg"))
-        # bg = PhotoImage(file="image/background.jpg")
+
         bg = Image.open("image/avatar5.png")
         bg = bg.resize((250, 250), Image.ANTIALIAS)
         bg = ImageTk.PhotoImage(bg)
@@ -136,7 +147,8 @@ class UserInfo:
             x=0,
             y=300)
 
-        self.spacer = tk.Label(self.root, text="Available classes", font=("calabri", 18), height=1, width=40, bg="white").place(
+        self.spacer = tk.Label(self.root, text="Available classes", font=("calabri", 18), height=1, width=40,
+                               bg="white").place(
             x=0,
             y=350)
         self.spacer = tk.Label(self.root, text="Your classes", font=("calabri", 18), height=1, width=40,
@@ -159,12 +171,14 @@ class UserInfo:
         self.class_tree.heading('name', text="Name", anchor=tk.CENTER)
         self.class_tree.heading('level', text="Level", anchor=tk.CENTER)
         self.class_tree.heading('capacity', text="Capacuty", anchor=tk.CENTER)
-        counter=0
-        cl=Curriculum()
-        classes=cl.load_all_classes()
+        counter = 0
+        cl = Curriculum()
+        classes = cl.load_all_classes()
         for cla in classes:
-            self.class_tree.insert(parent='', index=counter, iid=counter, text='',values=(cla[0], cla[1], cla[2], cla[3]))
-            counter+=1
+            real_capacity = int(cla[3]) - len(cla[4])
+            self.class_tree.insert(parent='', index=counter, iid=counter, text='',
+                                   values=(cla[0], cla[1], cla[2], real_capacity))
+            counter += 1
         # self.class_tree.insert(parent='', index=1, iid=1, text='',
         #                        values=(1, 406, "lower intermediate", 8))
         # self.class_tree.insert(parent='', index=2, iid=2, text='',
@@ -195,11 +209,11 @@ class UserInfo:
         self.profile_tree.place(x=700, y=400)
 
         self.add_button = tk.Button(self.root, text="-->", width=12, command=lambda: self.add()).place(x=570, y=400)
-        self.remove_button = tk.Button(self.root, text="Delete", width=12,command= lambda :self.remove()).place(x=570, y=440)
+        self.remove_button = tk.Button(self.root, text="Delete", width=12, command=lambda: self.remove()).place(x=570,
+                                                                                                                y=440)
         self.info_button = tk.Button(self.root, text="Info", width=12).place(x=570, y=480)
         self.counter = 4
         self.root.mainloop()
-
 
     def remove(self):
         get_tree_value = self.profile_tree.selection()
@@ -216,7 +230,7 @@ class UserInfo:
                         found = True
                 if not found:
                     self.class_tree.insert(parent='', index=self.counter, iid=self.counter, text='',
-                                             values=selected)
+                                           values=selected)
                     self.profile_tree.delete(item)
                     self.counter += 1
                     found = False
@@ -228,7 +242,7 @@ class UserInfo:
                     found = True
             if not found:
                 self.class_tree.insert(parent='', index=self.counter, iid=self.counter, text='',
-                                         values=selected)
+                                       values=selected)
                 self.profile_tree.delete(get_tree_value)
                 self.counter += 1
                 found = False
@@ -267,7 +281,6 @@ class UserInfo:
                 self.counter += 1
                 found = False
             self.counter += 1
-
 
     def save_user(self):
         # todo: check input and raise appropriate errors
@@ -324,7 +337,7 @@ class UserInterface:
         return data_provider
 
 
-user1asd = UserInfo(None)
+#user1asd = UserInfo(None)
 # user1asd.root.mainloop()
-# scr = Log()
+scr = Log()
 # user=User_interface()

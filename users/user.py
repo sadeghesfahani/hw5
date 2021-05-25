@@ -18,7 +18,13 @@ class User:
             self.is_login = True
 
     def register(self):
-        self.is_registered = self.authentication.register(self.type)
+        try:
+            self.is_registered = self.authentication.register(self.type)
+        except PasswordTooShort:
+            self.is_registered = False
+        # if self.is_registered is None:
+        #     self.is_registered=False
+        # if not self.is_registered or self.is_registered is None:
 
     def load_data(self):
         with open(f"users/user_info/{self.username}.txt", "r") as file:

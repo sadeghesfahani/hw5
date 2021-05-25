@@ -1,13 +1,18 @@
 import hashlib
+from exception import *
 
 
 class Authentication:
     def __init__(self, username, password, type=None, signup=False):
         self.username = username
-        self.__password = Authentication.make_hex(password)
+        if len(password)>7:
+            self.__password = Authentication.make_hex(password)
+        else:
+            raise PasswordTooShort(f"{self.username} tried to make a short password")
         self.signup = signup
         self.type = type
         self.logged_in = False
+        self.found = False
         # try:
         with open("users/database.txt", "r") as file:
             self.database = file.readlines()
@@ -45,12 +50,18 @@ class Authentication:
         return True if self.__password == self.__database_password else False
 
     def register(self, user_type):
-        try:
-            with open("users/database.txt", "a") as file:
-                file.write(f"{self.username},{self.__password},{user_type}\n")
-                return True
-        except:
-            return False
+        if self.found:
+            raise UserAlreadyExist(f"{self.username} is already exist")
+        else:
+            if len(self.__password) > 7:
+                try:
+                    with open("users/database.txt", "a") as file:
+                        file.write(f"{self.username},{self.__password},{user_type}\n")
+                        return True
+                except:
+                    return False
+            else:
+                raise PasswordTooShort("password too short")
 
 # sina = Auth("sina", "haha")
 # print(sina.logged_in)

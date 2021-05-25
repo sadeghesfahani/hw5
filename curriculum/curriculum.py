@@ -20,7 +20,7 @@ class Curriculum:
             print(file[:len(file)-4])
             self.ID=file[:len(file)-4]
             self.load(self.ID)
-            list_of_classes.append([self.ID,self.name,self.level,self.capacity])
+            list_of_classes.append([self.ID,self.name,self.level,self.capacity,self.students,self.teachers])
         return list_of_classes
     def load(self,ID):
         with open(f"curriculum/{ID}.txt", "r") as file:
