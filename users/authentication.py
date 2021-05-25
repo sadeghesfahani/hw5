@@ -8,7 +8,7 @@ class Authentication:
         if len(password)>7:
             self.__password = Authentication.make_hex(password)
         else:
-            raise PasswordTooShort(f"{self.username} tried to make a short password")
+            raise PasswordTooShort(f"{self.username} tried a short password")
         self.signup = signup
         self.type = type
         self.logged_in = False
@@ -57,9 +57,22 @@ class Authentication:
                 try:
                     with open("users/database.txt", "a") as file:
                         file.write(f"{self.username},{self.__password},{user_type}\n")
+
+                    with open(f"users/user_info/{self.username}.txt","w") as file:
+                        file.write(f"first_name=\n")
+                        file.write(f"last_name=\n")
+                        file.write(f"email=\n")
+                        file.write(f"class=\n")
+
                         return True
                 except:
                     return False
+
+                # with open((f"users/user_info/{self.username}.txt", "w")) as file:
+                #     file.write(f"first_name=\n")
+                #     file.write(f"last_name=\n")
+                #     file.write(f"email=\n")
+                #     file.write(f"class=\n")
             else:
                 raise PasswordTooShort("password too short")
 

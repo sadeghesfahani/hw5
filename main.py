@@ -68,12 +68,13 @@ class Log:
             user.log_in()
             # autatiocation = Auth()
             if user.is_login:
-                self.root.forget(self.root)
-                user_interface = UserInterface(user)
-                # self.root.quit()
+                #self.root.forget(self.root)
+                self.root.destroy()
+                user_interface = UserInfo(user)
+                #
             else:
 
-                raise UserAndPassNotMatch
+                raise UserAndPassNotMatch("username and password are not matched")
         except UserAndPassNotMatch:
             self.spacer_label.config(text="User of password wrong")
             self.timer = threading.Timer(1.0, self.change)
@@ -114,6 +115,7 @@ class UserInfo:
         self.last_name = str()
         self.email = str()
         self.user = user
+        self.user.load_data()
         self.root.title("more information")
         self.root.config(background="white")
 
@@ -128,6 +130,7 @@ class UserInfo:
                                          bg="white").place(x=350,
                                                            y=10)
         self.first_name_entry = tk.Entry(self.root, textvariable=self.first_name, width=25, font=("calabri", 18))
+        self.first_name_entry.insert(0,self.user.firt_name)
         self.first_name_entry.place(x=550, y=50)
         self.last_name_label = tk.Label(self.root, text="Last_name: ", font=("calabri", 18), height=4,
                                         bg="white").place(x=350,
@@ -135,10 +138,12 @@ class UserInfo:
         self.last_name_entry = tk.Entry(self.root, bg="white", textvariable=self.last_name, width=25,
                                         font=("calabri", 18))
         self.last_name_entry.place(x=550, y=140)
+        self.last_name_entry.insert(0,self.user.last_name)
         self.email_label = tk.Label(self.root, text="Email: ", font=("calabri", 18), height=4, bg="white").place(x=350,
                                                                                                                  y=200)
         self.email_entry = tk.Entry(self.root, textvariable=self.email, width=25, font=("calabri", 18))
         self.email_entry.place(x=550, y=240)
+        self.email_entry.insert(0,self.user.email)
         self.save = tk.Button(self.root, text="Save", command=lambda: self.save_user(), bg="cyan", width=25,
                               height=3).place(x=1000, y=50)
         self.picture = tk.Button(self.root, text="Avatar", command=lambda: self.save_user(), bg="cyan", width=25,
@@ -211,9 +216,14 @@ class UserInfo:
         self.add_button = tk.Button(self.root, text="-->", width=12, command=lambda: self.add()).place(x=570, y=400)
         self.remove_button = tk.Button(self.root, text="Delete", width=12, command=lambda: self.remove()).place(x=570,
                                                                                                                 y=440)
-        self.info_button = tk.Button(self.root, text="Info", width=12).place(x=570, y=480)
+        self.info_button = tk.Button(self.root, text="Info", width=12,command=lambda: self.info()).place(x=570, y=480)
         self.counter = 4
         self.root.mainloop()
+
+
+
+    def info(self):
+        get_tree_value = self.profile_tree.selection()
 
     def remove(self):
         get_tree_value = self.profile_tree.selection()
